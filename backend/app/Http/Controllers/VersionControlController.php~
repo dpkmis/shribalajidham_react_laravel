@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\VersionControl;
+use Yajra\DataTables\DataTables;
+use App\Services\Breadcrumbs;
+
+
+class VersionControlController extends Controller
+{
+
+    public function index()
+    {
+        Breadcrumbs::add('Dashboard', route('dashboard'));
+        Breadcrumbs::add('Master Data');
+        Breadcrumbs::add('Version Control');
+
+        $versions = VersionControl::all();
+        return view('version_control', compact('versions'));
+    }
+    // Return DataTable JSON
+    public function ajaxShowList(Request $request)
+    {
+        $query = VersionControl::select([
+            'id',
+            'version',
+            'min_version',
+            'force_update',
+            'app_url',
+            'app_id',
+            'platform',
+            'note',
+            'free_v',
+            'in_release_user',
+            'in_release',
+            'log_interval',
+            'log_capture',
+            'log_url',
+            'log_server_id',
+            'status',
+            'created_at',
+            'created_by'
+        ])->orderBy('id', 'asc');
+
+        // Apply column filters
+        if ($request->has('columns')) {
+            foreach ($request->get('columns') as $col) {
+                $colName = $col['data'];
+                $searchValue = $col['search']['value'];
+                if (!empty($searchValue)) {
+                    if ($colName === 'created_at') {
+                        $dates = explode(' - ', $searchValue);
+                        if (count($dates) === 2) {
+                            $start = date('Y-m-d 00:00:00', strtotime($dates[0]));
+                            $end = date('Y-m-d 23:59:59', strtotime($dates[1]));
+                            $query->whereBetween('created_at', [$start, $end]);
+                        }
+                    } elseif (in_array($colName, ['status', 'force_update', 'in_release', 'log_capture', 'platform'])) {
+                        $query->where($colName, $searchValue);
+                    } else {
+                        $query->where($colName, 'like', "%{$searchValue}%");
+                    }
+                }
+            }
+        }
+
+        return DataTables::of($query)
+            ->filterColumn('created_at', function ($query, $keyword) use ($request) {
+                $columns = $request->get('columns', []);
+                foreach ($columns as $col) {
+                    if ($col['data'] === 'created_at' && !empty($col['search']['value'])) {
+                        $dates = explode(' - ', $col['search']['value']);
+                        if (count($dates) === 2) {
+                            $start = date('Y-m-d 00:00:00', strtotime($dates[0]));
+                            $end   = date('Y-m-d 23:59:59', strtotime($dates[1]));
+                            $query->whereBetween('created_at', [$start, $end]);
+                        }
+                    }
+                }
+            })
+            ->addColumn('action', function ($row) {
+                return '
+                    <a href="#" class="btn btn-sm btn-primary edit-version" data-id="'.$row->id.'">Update</a>
+                    <button type="button" class="btn btn-sm btn-danger cancel-version" data-id="'.$row->id.'">Cancel</button>
+                ';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    // Fetch single record for edit modal
+    public function show($id)
+    {
+        $version = VersionControl::findOrFail($id);
+        return response()->json($version);
+    }
+
+    // Store new version
+    public function store(Request $request)
+    {
+        $data = $request->all();
+        $version = VersionControl::create($data);
+        return response()->json(['message' => 'Version added successfully!', 'id' => $version->id]);
+    }
+
+    // Update version
+    public function update(Request $request, $id)
+    {
+        $version = VersionControl::findOrFail($id);
+        $version->update($request->all());
+        return response()->json(['message' => 'Version updated successfully!']);
+    }
+
+    // Delete / Cancel version
+    public function destroy($id)
+    {
+        $version = VersionControl::findOrFail($id);
+        $version->delete();
+        return response()->json(['message' => 'Version cancelled successfully!']);
+    }
+}

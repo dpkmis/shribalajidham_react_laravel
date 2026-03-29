@@ -1,0 +1,272 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\MasterCategory;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use App\Services\Breadcrumbs;
+
+
+class MasterCategoriesController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        Breadcrumbs::add('Dashboard', route('dashboard'));
+        Breadcrumbs::add('Master Data');
+        Breadcrumbs::add('Categories');  
+        $languages = \DB::table('ugc_language')->select('id', 'identifier')->get();
+        return view('master_categories.index', compact('languages'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        // Validate incoming request
+        $request->validate([
+            // 'display_title' => 'required|string|max:255',
+            'title' => 'required|array',// JSON array of content + language
+            'status' => 'required|boolean',
+            'is_filter_tag' => 'required|boolean',
+        ]);
+
+        try {
+            // dd($request);
+            // Prepare data
+            $titleJson = json_encode($request->title);
+            $englishData = array_filter($request->title, function($item) {
+                return strtolower($item['language']) === 'english';
+            });
+            $englishData = array_values($englishData);
+            if(!empty($englishData)){
+                $display_title = $englishData[0]['content'];
+            }else{
+                $display_title = $request->title[0]['content'];
+            }
+            $data = [
+                'display_title' => $display_title,
+                'title' => $titleJson, // already JSON string from JS
+                'status' => $request->status,
+                'is_filter_tag' => $request->is_filter_tag,
+                'position' => MasterCategory::max('position') + 1, // optional: auto-increment position
+                'modified_at' => now(),
+            ];
+            // Create new category
+            $category = MasterCategory::create($data);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Category added successfully!',
+                'data' => $category
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function savePositions(Request $request)
+    {
+        $positions = $request->positions; // array of {id, position}
+
+        foreach ($positions as $pos) {
+            MasterCategory::where('id', $pos['id'])->update(['position' => $pos['position']]);
+        }
+
+        return response()->json(['message' => 'Positions updated successfully!']);
+    }
+
+
+
+
+    /**
+     * Display the specified resource.
+     */
+   public function ajaxShowList(Request $request)
+{
+    $query = MasterCategory::select([
+        'id', 
+        'title', 
+        'display_title', 
+        'is_filter_tag', 
+        'status',   
+        'position', 
+        'modified_at'
+    ])->orderBy('position', 'asc');
+
+    return DataTables::of($query)
+        ->addIndexColumn()
+        
+        // Convert numeric status to text
+        ->editColumn('status', function($row){
+            if ($row->status == 0) return 'Active';
+            if ($row->status == 1) return 'Inactive';
+            if ($row->status == 2) return 'Deleted';
+            return $row->status;
+        })
+
+        // Convert numeric filter tag to text
+        ->editColumn('is_filter_tag', function($row){
+            if ($row->is_filter_tag == 0) return 'Yes';
+            if ($row->is_filter_tag == 1) return 'No';
+            return $row->is_filter_tag;
+        })
+
+        // Handle filtering for status, tag, and modified_at
+        ->filterColumn('status', function($query, $keyword) {
+            if ($keyword === "0" || $keyword === "Active") $query->where('status', 0);
+            elseif ($keyword === "1" || $keyword === "Inactive") $query->where('status', 1);
+            elseif ($keyword === "2" || $keyword === "Deleted") $query->where('status', 2);
+        })
+        ->filterColumn('is_filter_tag', function($query, $keyword) {
+            if ($keyword === "0" || strtolower($keyword) === "yes") $query->where('is_filter_tag', 0);
+            elseif ($keyword === "1" || strtolower($keyword) === "no") $query->where('is_filter_tag', 1);
+        })
+        ->filterColumn('modified_at', function ($query, $keyword) use ($request) {
+            if(!empty($keyword)) {
+                $dates = explode(' - ', $keyword);
+                if(count($dates) === 2){
+                    $start = date('Y-m-d 00:00:00', strtotime($dates[0]));
+                    $end   = date('Y-m-d 23:59:59', strtotime($dates[1]));
+                    $query->whereBetween('modified_at', [$start, $end]);
+                }
+            }
+        })
+
+        ->addColumn('action', function ($row) {
+            return '
+                <div class="dropdown ms-auto">
+                    <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-horizontal-rounded text-option"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item view-category" href="#" data-id="'.$row->id.'">View</a></li>
+                        <li><a class="dropdown-item edit-category" href="#" data-id="'.$row->id.'">Edit</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a href="javascript:void(0);" class="dropdown-item text-danger delete-category" data-id="'.$row->id.'">Delete</a></li>
+                    </ul>
+                </div>
+            ';
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+}
+
+
+
+
+    public function show($id)
+    {
+        $Category = MasterCategory::findOrFail($id);
+        return response()->json([
+            'id' => $Category->id,
+            'title' => $Category->title,
+            'display_title' => $Category->display_title,
+            'is_filter_tag' => $Category->is_filter_tag,
+            'status' => $Category->status,
+            'position' => $Category->position,
+            'modified_at' => $Category->modified_at,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(MasterCategory $masterCategory)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, MasterCategory $masterCategory)
+    {
+        // Validate incoming request
+        $request->validate([
+            // 'display_title' => 'required|string|max:255',
+            'title' => 'required|array', // array of content + language
+            'status' => 'required|boolean',
+            'is_filter_tag' => 'required|boolean',
+        ]);
+
+        try {
+            // Prepare title JSON
+            $titleJson = json_encode($request->title);
+            $englishData = array_filter($request->title, function($item) {
+                return strtolower($item['language']) === 'english';
+            });
+            $englishData = array_values($englishData);
+            if(!empty($englishData)){
+                $display_title = $englishData[0]['content'];
+            }else{
+                $display_title = $request->title[0]['content'];
+            }
+            // Update the record
+            $masterCategory->update([
+                'display_title' => $display_title,
+                'title' => $titleJson,
+                'status' => $request->status,
+                'is_filter_tag' => $request->is_filter_tag,
+                'modified_at' => now(),
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Category updated successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        try {
+            $updated = MasterCategory::where('id', $id)->update([
+                'status' => 2,
+                'modified_at' => now()
+            ]);
+            if ($updated) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Record soft deleted successfully.'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Record not found.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong: ' . $e->getMessage()
+            ]);
+        }
+
+    }
+
+}

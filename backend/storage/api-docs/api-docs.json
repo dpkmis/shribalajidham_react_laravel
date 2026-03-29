@@ -1,0 +1,2159 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Shri BalaJi Dham HMS API",
+        "description": "Hotel Management System REST API for Shri BalaJi Dham Hotel, Mathura. Provides endpoints for room management, bookings, guest management, financials, and more.",
+        "contact": {
+            "name": "Shri BalaJi Dham Support",
+            "email": "sribalajidhamhotel@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local Development Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login and get bearer token",
+                "operationId": "authLogin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@shribalajidham.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "device_name": {
+                                        "type": "string",
+                                        "example": "web-browser"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                },
+                                                "user": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    },
+                    "423": {
+                        "description": "Account locked"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "operationId": "authRegister",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Deepak Kumar"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "deepak@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+919639066602"
+                                    },
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registration successful"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout and revoke current token",
+                "operationId": "authLogout",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/profile": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get authenticated user profile",
+                "operationId": "authProfile",
+                "responses": {
+                    "200": {
+                        "description": "User profile"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh token (revoke old, issue new)",
+                "operationId": "authRefresh",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "List bookings with filters and pagination",
+                "operationId": "listBookings",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "confirmed",
+                                "checked-in",
+                                "checked-out",
+                                "cancelled",
+                                "no-show"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "payment_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "unpaid",
+                                "partially-paid",
+                                "paid"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "from_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "guest_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by booking reference or guest name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 25
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bookings list with pagination"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Create a new booking",
+                "operationId": "storeBooking",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "guest_id",
+                                    "checkin_date",
+                                    "checkout_date",
+                                    "number_of_adults",
+                                    "rooms"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "checkin_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-04-01"
+                                    },
+                                    "checkout_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-04-03"
+                                    },
+                                    "number_of_adults": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "number_of_children": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "example": "website"
+                                    },
+                                    "special_requests": {
+                                        "type": "string",
+                                        "example": "Early check-in if possible"
+                                    },
+                                    "rooms": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "room_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "rate_cents": {
+                                                    "type": "integer",
+                                                    "example": 237600
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Booking created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "409": {
+                        "description": "Room not available"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings/{id}": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get booking details with rooms, charges, payments",
+                "operationId": "showBooking",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Booking details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings/{id}/checkin": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Check-in a guest",
+                "operationId": "checkinBooking",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Checked in successfully"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "409": {
+                        "description": "Invalid status for check-in"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings/{id}/checkout": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Check-out a guest",
+                "operationId": "checkoutBooking",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Checked out successfully"
+                    },
+                    "409": {
+                        "description": "Invalid status for check-out"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Cancel a booking",
+                "operationId": "cancelBooking",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "reason": {
+                                        "type": "string",
+                                        "example": "Guest requested cancellation"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Booking cancelled"
+                    },
+                    "409": {
+                        "description": "Cannot cancel"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings/today": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get today's check-ins and check-outs",
+                "operationId": "todayBookings",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Today's bookings summary"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/dashboard/stats": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Get dashboard statistics",
+                "operationId": "dashboardStats",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dashboard stats",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "rooms": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer"
+                                                        },
+                                                        "available": {
+                                                            "type": "integer"
+                                                        },
+                                                        "occupied": {
+                                                            "type": "integer"
+                                                        },
+                                                        "occupancy_rate": {
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "bookings": {
+                                                    "properties": {
+                                                        "today_checkins": {
+                                                            "type": "integer"
+                                                        },
+                                                        "today_checkouts": {
+                                                            "type": "integer"
+                                                        },
+                                                        "active_bookings": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "revenue": {
+                                                    "properties": {
+                                                        "today": {
+                                                            "type": "number"
+                                                        },
+                                                        "this_month": {
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/guests": {
+            "get": {
+                "tags": [
+                    "Guests"
+                ],
+                "summary": "List guests with search and filters",
+                "operationId": "listGuests",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by name, email, or phone",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "guest_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "regular",
+                                "corporate",
+                                "travel-agent",
+                                "walk-in"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "is_vip",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 25
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Guests list with pagination"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Guests"
+                ],
+                "summary": "Create a new guest profile",
+                "operationId": "storeGuest",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "first_name",
+                                    "last_name",
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Rajesh"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Kumar"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Mr"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+919876543210"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "rajesh@example.com"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "New Delhi"
+                                    },
+                                    "id_type": {
+                                        "type": "string",
+                                        "example": "Aadhaar"
+                                    },
+                                    "id_number": {
+                                        "type": "string",
+                                        "example": "1234-5678-9012"
+                                    },
+                                    "meal_preference": {
+                                        "type": "string",
+                                        "example": "veg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Guest created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/guests/{id}": {
+            "get": {
+                "tags": [
+                    "Guests"
+                ],
+                "summary": "Get guest profile details",
+                "operationId": "showGuest",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Guest details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Guests"
+                ],
+                "summary": "Update a guest profile",
+                "operationId": "updateGuest",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "is_vip": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guest updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Guests"
+                ],
+                "summary": "Delete a guest (soft delete)",
+                "operationId": "deleteGuest",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Guest deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/guests/search": {
+            "get": {
+                "tags": [
+                    "Guests"
+                ],
+                "summary": "Quick search guests for autocomplete",
+                "operationId": "searchGuests",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "minLength": 2
+                        }
+                    },
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results (max 10)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/properties": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "List all properties",
+                "operationId": "listProperties",
+                "responses": {
+                    "200": {
+                        "description": "Properties list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "code": {
+                                                        "type": "string",
+                                                        "example": "SBD-MTR"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Shri BalaJi Dham Hotel"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Mathura"
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "example": "India"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/properties/{id}": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get property details",
+                "operationId": "showProperty",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/public/booking": {
+            "post": {
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Create booking from website (no auth required)",
+                "operationId": "publicCreateBooking",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "phone",
+                                    "email",
+                                    "check_in",
+                                    "check_out",
+                                    "room_type_id",
+                                    "guests"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Rajesh Kumar"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+919876543210"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "rajesh@example.com"
+                                    },
+                                    "check_in": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-04-01"
+                                    },
+                                    "check_out": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-04-03"
+                                    },
+                                    "room_type_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "guests": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "special_requests": {
+                                        "type": "string",
+                                        "example": "Early check-in"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Booking created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "409": {
+                        "description": "No rooms available"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/rooms": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "List rooms with filters",
+                "operationId": "listRooms",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "room_type_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "available",
+                                "occupied",
+                                "reserved",
+                                "maintenance",
+                                "out-of-order",
+                                "blocked"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "floor",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 25
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rooms list with pagination",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "room_number": {
+                                                        "type": "string",
+                                                        "example": "101"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "available"
+                                                    },
+                                                    "current_rate": {
+                                                        "type": "number",
+                                                        "example": 2376
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "current_page": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Create a new room",
+                "operationId": "storeRoom",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "room_number",
+                                    "room_type_id"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_number": {
+                                        "type": "string",
+                                        "example": "201"
+                                    },
+                                    "room_type_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "floor": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "available"
+                                    },
+                                    "price_override": {
+                                        "type": "number",
+                                        "example": 2500
+                                    },
+                                    "is_smoking": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "is_accessible": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Room created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/rooms/available": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "List only available rooms (clean, active, not occupied)",
+                "operationId": "listAvailableRooms",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "room_type_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "checkin_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "checkout_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Available rooms"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/rooms/{id}": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get room details",
+                "operationId": "showRoom",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Update a room",
+                "operationId": "updateRoom",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "room_number": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    },
+                                    "housekeeping_status": {
+                                        "type": "string"
+                                    },
+                                    "price_override": {
+                                        "type": "number"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Room updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Delete a room (soft delete)",
+                "operationId": "deleteRoom",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/rooms/status-summary": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get room status summary counts",
+                "operationId": "roomStatusSummary",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status counts"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/room-features": {
+            "get": {
+                "tags": [
+                    "Room Features"
+                ],
+                "summary": "List all room features/amenities",
+                "operationId": "listRoomFeatures",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "active_only",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room features list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Free WiFi"
+                                                    },
+                                                    "code": {
+                                                        "type": "string",
+                                                        "example": "WIFI"
+                                                    },
+                                                    "icon": {
+                                                        "type": "string",
+                                                        "example": "wifi"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Room Features"
+                ],
+                "summary": "Create a new room feature",
+                "operationId": "storeRoomFeature",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "name",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Air Conditioning"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "AC"
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "example": "snowflake"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Feature created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/room-features/{id}": {
+            "get": {
+                "tags": [
+                    "Room Features"
+                ],
+                "summary": "Get room feature details",
+                "operationId": "showRoomFeature",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Feature details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Room Features"
+                ],
+                "summary": "Update a room feature",
+                "operationId": "updateRoomFeature",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "icon": {
+                                        "type": "string"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Feature updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Room Features"
+                ],
+                "summary": "Delete a room feature (soft delete)",
+                "operationId": "deleteRoomFeature",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Feature deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/room-types": {
+            "get": {
+                "tags": [
+                    "Room Types"
+                ],
+                "summary": "List all room types",
+                "operationId": "listRoomTypes",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "active_only",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "with_features",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room types list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Deluxe Room"
+                                                    },
+                                                    "default_rate": {
+                                                        "type": "number",
+                                                        "example": 3520
+                                                    },
+                                                    "max_occupancy": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "bed_type": {
+                                                        "type": "string",
+                                                        "example": "King Size"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Room Types"
+                ],
+                "summary": "Create a new room type",
+                "operationId": "storeRoomType",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "name",
+                                    "code",
+                                    "default_rate",
+                                    "max_occupancy",
+                                    "max_adults"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Superior Double Room"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "SUP-DBL"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "default_rate": {
+                                        "type": "number",
+                                        "example": 4400
+                                    },
+                                    "max_occupancy": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "max_adults": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "max_children": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "beds": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "bed_type": {
+                                        "type": "string",
+                                        "example": "Double + King"
+                                    },
+                                    "room_size_sqm": {
+                                        "type": "number",
+                                        "example": 32.5
+                                    },
+                                    "amenities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "feature_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Room type created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/room-types/{id}": {
+            "get": {
+                "tags": [
+                    "Room Types"
+                ],
+                "summary": "Get room type details with features",
+                "operationId": "showRoomType",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room type details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Room Types"
+                ],
+                "summary": "Update a room type",
+                "operationId": "updateRoomType",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "default_rate": {
+                                        "type": "number"
+                                    },
+                                    "feature_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Room type updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Room Types"
+                ],
+                "summary": "Delete a room type (soft delete)",
+                "operationId": "deleteRoomType",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room type deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "Paste the token from /auth/login response (without \"Bearer\" prefix)"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authentication endpoints"
+        },
+        {
+            "name": "Properties",
+            "description": "Property management"
+        },
+        {
+            "name": "Room Types",
+            "description": "Room type master data"
+        },
+        {
+            "name": "Room Features",
+            "description": "Room features/amenities master data"
+        },
+        {
+            "name": "Rooms",
+            "description": "Room inventory management"
+        },
+        {
+            "name": "Guests",
+            "description": "Guest profile management"
+        },
+        {
+            "name": "Bookings",
+            "description": "Booking lifecycle management"
+        },
+        {
+            "name": "Dashboard",
+            "description": "Dashboard statistics"
+        },
+        {
+            "name": "Public",
+            "description": "Public"
+        }
+    ],
+    "security": [
+        {
+            "sanctum": []
+        }
+    ]
+}

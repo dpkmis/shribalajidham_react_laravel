@@ -1,0 +1,311 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\MasterGenre;
+use App\Models\MasterCategory; 
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use App\Services\Breadcrumbs;
+
+
+class MasterGenreController extends Controller
+{
+       /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        Breadcrumbs::add('Dashboard', route('dashboard'));
+        Breadcrumbs::add('Master Data');
+        Breadcrumbs::add('Genres');
+
+        $languages = \DB::table('ugc_language')->select('id', 'identifier')->get();
+
+        $categories = MasterCategory::select('id', 'display_title')->orderBy('display_title')->get();
+        return view('master_genre.index', compact('categories', 'languages'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        // Validate incoming request
+        $request->validate([
+            // 'display_title' => 'required|string|max:255',
+            'category_id' => 'required|exists:ugc_categories,id', // ✅ validate category
+            'title' => 'required|array',
+            'status' => 'required|boolean',
+            'is_filter_tag' => 'required|boolean',
+        ]);
+
+        try {
+            // dd($request);
+            // Prepare data
+            $titleJson = json_encode($request->title);
+
+            $englishData = array_filter($request->title, function($item) {
+                return strtolower($item['language']) === 'english';
+            });
+            $englishData = array_values($englishData);
+            if(!empty($englishData)){
+                $display_title = $englishData[0]['content'];
+            }else{
+                $display_title = $request->title[0]['content'];
+            }
+
+            $data = [
+                'display_title' => $display_title,
+                'category_id' => $request->category_id, // ✅ include category_id
+                'title' => $titleJson,
+                'status' => $request->status,
+                'is_filter_tag' => $request->is_filter_tag,
+                'position' => MasterGenre::max('position') + 1,
+                'modified_at' => now(),
+            ];
+
+            // Create new Genre
+            $genre = MasterGenre::create($data);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Genre added successfully!',
+                'data' => $genre
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function savePositions(Request $request)
+    {
+        $positions = $request->positions; // array of {id, position}
+
+        foreach ($positions as $pos) {
+            MasterGenre::where('id', $pos['id'])->update(['position' => $pos['position']]);
+        }
+
+        return response()->json(['message' => 'Positions updated successfully!']);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function ajaxShowList(Request $request)
+    {
+        $query = MasterGenre::select([
+            'ugc_genres.id',
+            'ugc_genres.title',
+            'ugc_genres.category_id',
+            'ugc_categories.display_title as category_title',
+            'ugc_genres.display_title',
+            'ugc_genres.is_filter_tag',
+            'ugc_genres.status',
+            'ugc_genres.position',
+            'ugc_genres.modified_at'
+        ])
+        ->leftJoin('ugc_categories', 'ugc_genres.category_id', '=', 'ugc_categories.id')
+        ->orderBy('ugc_genres.position', 'asc');
+
+        // Apply column filters
+        if ($request->has('columns')) {
+            foreach ($request->get('columns') as $col) {
+                $colName = $col['data'];
+                $searchValue = $col['search']['value'];
+
+                if ($searchValue !== null && $searchValue !== '') {
+                    if ($colName === 'display_title') {
+                        $query->where('ugc_genres.display_title', 'like', "%{$searchValue}%");
+                    } elseif ($colName === 'category_title') {
+                        $query->where('ugc_categories.display_title', 'like', "%{$searchValue}%");
+                    } elseif ($colName === 'status') {
+                        $query->where('ugc_genres.status', $searchValue);
+                    } elseif ($colName === 'is_filter_tag') {
+                        $query->where('ugc_genres.is_filter_tag', $searchValue);
+                    } elseif ($colName === 'modified_at') {
+                        // Date range filter
+                        $dates = explode(' - ', $searchValue);
+                        if(count($dates) === 2) {
+                            $start = date('Y-m-d 00:00:00', strtotime($dates[0]));
+                            $end = date('Y-m-d 23:59:59', strtotime($dates[1]));
+                            $query->whereBetween('ugc_genres.modified_at', [$start, $end]);
+                        }
+                    } else {
+                        $query->where($colName, 'like', "%{$searchValue}%");
+                    }
+                }
+            }
+        }
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('status', function($row){
+                if ($row->status == 0) {
+                    return 'Active';
+                } elseif ($row->status == 1) {
+                    return 'Inactive';
+                } elseif ($row->status == 2) {
+                    return 'Deleted';
+                }
+                return $row->status;
+            })
+            ->editColumn('is_filter_tag', function($row){
+                if ($row->is_filter_tag == 0) {
+                    return 'Yes';
+                } elseif ($row->is_filter_tag == 1) {
+                    return 'No';
+                }
+                return $row->is_filter_tag;
+            })
+            ->filterColumn('modified_at', function ($query, $keyword) use ($request) {
+                // Only apply the date range filter from the request columns
+                $columns = $request->get('columns', []);
+                foreach ($columns as $col) {
+                    if ($col['data'] === 'modified_at' && !empty($col['search']['value'])) {
+                        $dates = explode(' - ', $col['search']['value']);
+                        if (count($dates) === 2) {
+                            $start = date('Y-m-d 00:00:00', strtotime($dates[0]));
+                            $end   = date('Y-m-d 23:59:59', strtotime($dates[1]));
+                            $query->whereBetween('ugc_genres.modified_at', [$start, $end]);
+                        }
+                    }
+                }
+            })
+            ->addColumn('action', function ($row) {
+                return '
+                    <div class="dropdown ms-auto">
+                        <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
+                            <i class="bx bx-dots-horizontal-rounded text-option"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item view-genre" href="#" data-id="'.$row->id.'">View</a></li>
+                            <li><a class="dropdown-item edit-genre" href="#" data-id="'.$row->id.'">Edit</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a href="javascript:void(0);" class="dropdown-item text-danger delete-genre" data-id="'.$row->id.'">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                ';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+
+    }
+
+
+    public function show($id)
+    {
+        $Genre = MasterGenre::findOrFail($id);
+        return response()->json([
+            'id' => $Genre->id,
+            'title' => $Genre->title,
+            'category_id' => $Genre->category_id,
+            'display_title' => $Genre->display_title,
+            'is_filter_tag' => $Genre->is_filter_tag,
+            'status' => $Genre->status,
+            'position' => $Genre->position,
+            'modified_at' => $Genre->modified_at,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(MasterGenre $MasterGenre)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, MasterGenre $MasterGenre)
+    {
+        // Validate incoming request
+        $request->validate([
+            // 'display_title' => 'required|string|max:255',
+            'title' => 'required|array', // array of content + language
+            'status' => 'required|boolean',
+            'is_filter_tag' => 'required|boolean',
+        ]);
+        try {
+            // Prepare title JSON
+            $titleJson = json_encode($request->title);
+
+            $englishData = array_filter($request->title, function($item) {
+                return strtolower($item['language']) === 'english';
+            });
+            $englishData = array_values($englishData);
+            if(!empty($englishData)){
+                $display_title = $englishData[0]['content'];
+            }else{
+                $display_title = $request->title[0]['content'];
+            }
+
+            // Update the record
+            $MasterGenre->update([
+                'display_title' => $display_title,
+                'title' => $titleJson,
+                'status' => $request->status,
+                'is_filter_tag' => $request->is_filter_tag,
+                'modified_at' => now(),
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Genre updated successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(MasterGenre $MasterGenre)
+    {
+        try {
+            // Update status to 2 (Deleted)
+            $deleted = $MasterGenre->update([
+                'status' => 2,
+                'modified_at' => now(),
+            ]);
+
+            if ($deleted) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Genre deleted successfully (soft delete).'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Genre not found.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong: ' . $e->getMessage(),
+            ]);
+        }
+    }
+}

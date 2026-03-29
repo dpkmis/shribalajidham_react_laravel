@@ -1,0 +1,246 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use App\Services\Breadcrumbs;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use App\Models\VideoModeration;
+
+
+class VideoModerationController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        Breadcrumbs::add('Dashboard', route('dashboard'));
+        Breadcrumbs::add('Configuration');
+        Breadcrumbs::add('Rule Engine');
+        Breadcrumbs::add('Video Moderation');
+
+
+        return view('configuration.rule_engine.video_moderation.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        // 🔹 Validate CSV file
+        $validator = Validator::make($request->all(), [
+            'csv_file' => 'required|file|mimes:csv,txt|max:10240',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'validation_error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $file = $request->file('csv_file');
+            $handle = fopen($file->getRealPath(), 'r');
+
+            $header = fgetcsv($handle);
+            if (!$header) {
+                return response()->json(['status' => 'error', 'message' => 'CSV header missing'], 400);
+            }
+
+            $expected = ['topLevelCategoryL1', 'secondLevelCategoryL2', 'thirdLevelCategoryL3', 'definitions', 'confidenceScore'];
+            $missing = array_diff($expected, $header);
+            if (!empty($missing)) {
+                return response()->json(['status' => 'error', 'message' => 'Missing columns: ' . implode(', ', $missing)], 400);
+            }
+
+            $dataToInsert = [];
+            $updateCount = 0;
+            $insertCount = 0;
+
+            while (($row = fgetcsv($handle)) !== false) {
+                $row = array_combine($header, $row);
+
+                $topLevelCategoryL1 = trim($row['topLevelCategoryL1']);
+                $secondLevelCategoryL2 = trim($row['secondLevelCategoryL2']);
+                $thirdLevelCategoryL3 = trim($row['thirdLevelCategoryL3']);
+                $definitions = trim($row['definitions']);
+                $confidenceScore = (float) $row['confidenceScore'];
+
+                if (!$topLevelCategoryL1 || !$secondLevelCategoryL2 || !$thirdLevelCategoryL3) {
+                    continue; // Skip incomplete rows
+                }
+
+                $existing = DB::table('ugc_video_moderations')
+                    ->where('top_level_category_L1', $topLevelCategoryL1)
+                    ->where('second_level_category_L2', $secondLevelCategoryL2)
+                    ->where('third_level_category_L3', $thirdLevelCategoryL3)
+                    ->first();
+
+                if ($existing) {
+                    // 🔹 Update existing
+                    DB::table('ugc_video_moderations')
+                        ->where('id', $existing->id)
+                        ->update([
+                            'definitions' => $definitions,
+                            'confidence_score' => $confidenceScore,
+                            'updated_at' => now(),
+                        ]);
+                    $updateCount++;
+                } else {
+                    // 🔹 Prepare for insert
+                    $dataToInsert[] = [
+                        'top_level_category_L1' => $topLevelCategoryL1,
+                        'second_level_category_L2' => $secondLevelCategoryL2 ?: null,
+                        'third_level_category_L3' => $thirdLevelCategoryL3 ?: null,
+                        'definitions' => $definitions ?: null,
+                        'confidence_score' => $confidenceScore ?: null,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            fclose($handle);
+
+            // 🔹 Insert new records (bulk)
+            if (!empty($dataToInsert)) {
+                DB::table('ugc_video_moderations')->insert($dataToInsert);
+                $insertCount = count($dataToInsert);
+            }
+
+            if ($insertCount === 0 && $updateCount === 0) {
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'No new or updated records found in CSV.',
+                ]);
+            }
+
+            $msgParts = [];
+            if ($insertCount > 0)
+                $msgParts[] = "$insertCount new records inserted";
+            if ($updateCount > 0)
+                $msgParts[] = "$updateCount records updated";
+
+            return response()->json([
+                'status' => 'success',
+                'message' => implode(' and ', $msgParts) . ' successfully!',
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function ajaxShowList(Request $request)
+    {
+        $query = VideoModeration::select('*')->where('is_deleted', 0)->orderBy('updated_at', 'desc'); // <-- ye line add karo
+
+        // Apply column filters
+        if ($request->has('columns')) {
+            foreach ($request->get('columns') as $col) {
+                $colName = $col['data'];
+                $searchValue = $col['search']['value'];
+
+                if (!empty($searchValue)) {
+                    if ($colName === 'updated_at') {
+                        // Date range filter
+                        $dates = explode(' - ', $searchValue);
+                        if (count($dates) === 2) {
+                            $start = date('Y-m-d 00:00:00', strtotime($dates[0]));
+                            $end = date('Y-m-d 23:59:59', strtotime($dates[1]));
+                            $query->whereBetween('updated_at', [$start, $end]);
+                        }
+                    } else {
+                        $query->where($colName, 'like', "%{$searchValue}%");
+                    }
+                }
+            }
+        }
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->filterColumn('updated_at', function ($query, $keyword) {
+                // yaha kuch bhi nahi karna because date range filter hum upar hi handle kar chuke hain
+                // agar chaho to aap specific handling bhi kar sakte ho
+            })
+            ->editColumn('title', function ($row) {
+                $titles = json_decode($row->title, true);
+                return $titles[0]['title'] ?? $row->title;
+            })
+            ->addColumn('type', function ($row) {
+                $titles = json_decode($row->title, true);
+                return $titles[0]['language'] ?? '';
+            })
+            ->addColumn('action', function ($row) {
+                return '
+                    <div class="d-flex">
+                        <!-- Circular icon-only version -->
+                        <button class="btn btn-success btn-icon update-btn" data-id="'.$row->id.'" disabled>
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-icon" onclick="deleteRecord('.$row->id.')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+
+                ';
+            })
+            ->rawColumns(['status', 'action'])
+            ->make(true);
+
+    }
+
+    public function updateConfidence(Request $request)
+    {
+        // $request->validate([
+        //     'id' => 'required|integer|exists:video_moderations,id',
+        //     'confidence_score' => 'required|numeric|min:0|max:100'
+        // ]);
+
+        $res = VideoModeration::where('id', $request->id)->update(['confidence_score' => $request->confidence_score, 'updated_at' => now()]);
+        
+        return response()->json([
+            'status' => true,
+            'message' => 'Confidence score updated successfully.'
+        ]);
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            $deleted = VideoModeration::where('id', $request->id)->update(['is_deleted' => 1]);
+
+            if ($deleted) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Record deleted successfully.'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Record not found.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong: ' . $e->getMessage()
+            ]);
+        }
+    }
+}
