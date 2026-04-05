@@ -1,0 +1,195 @@
+.footer {
+  background: var(--dark-primary);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='%23D4600A' stroke-width='0.15' opacity='0.04'/%3E%3C/svg%3E");
+  color: rgba(255,255,255,0.62);
+  position: relative;
+  padding-top: 0;
+}
+
+.footer-wave {
+  line-height: 0;
+  margin-bottom: 60px;
+}
+
+.footer-wave svg { width: 100%; height: 70px; }
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+  gap: 40px;
+  padding-bottom: 50px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Brand */
+.footer-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.footer-logo-mark {
+  width: 44px;
+  height: 44px;
+  background: var(--gradient-fire);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  transform: rotate(-5deg);
+}
+
+.footer-logo-img {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.footer-logo-name {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+}
+
+.fl-balaji {
+  font-size: 22px;
+  background: var(--gradient-fire);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.fl-dham { font-size: 18px; color: var(--gold); }
+
+.fl-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+.footer-desc {
+  font-size: 13px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.footer-om { font-size: 30px; color: var(--saffron); opacity: 0.3; }
+
+/* Columns */
+.footer-col h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 22px;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.footer-col h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28px;
+  height: 2px;
+  background: var(--gradient-warm);
+  border-radius: 1px;
+}
+
+.footer-col ul { list-style: none; padding: 0; }
+
+.footer-col li { margin-bottom: 10px; }
+
+.footer-col a {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-col a:hover {
+  color: var(--saffron);
+  transform: translateX(4px);
+}
+
+/* Contact Col */
+.fc-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  align-items: flex-start;
+}
+
+.fc-item svg { color: var(--saffron); font-size: 15px; margin-top: 3px; min-width: 15px; }
+
+.fc-item a {
+  color: rgba(255,255,255,0.55);
+  transition: color 0.3s;
+}
+
+.fc-item a:hover { color: var(--gold); }
+
+/* Bottom */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0 30px;
+  font-size: 13px;
+}
+
+.fb-heart { color: var(--vermillion); margin: 0 3px; vertical-align: middle; }
+
+.fb-links { display: flex; gap: 20px; }
+
+.fb-links a {
+  color: rgba(255,255,255,0.4);
+  transition: color 0.3s;
+  font-size: 12px;
+}
+
+.fb-links a:hover { color: var(--saffron); }
+
+/* Scroll Top */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 95px;
+  right: 25px;
+  width: 46px;
+  height: 46px;
+  background: var(--gradient-warm);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(232,93,4,0.35);
+  transition: all 0.3s;
+  z-index: 100;
+}
+
+.scroll-top-btn:hover { transform: translateY(-4px); }
+
+@media (max-width: 968px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+}
+
+@media (max-width: 576px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+}

@@ -1,0 +1,229 @@
+/* ============ HOW TO REACH SECTION ============ */
+.howtoreach-section {
+  background: white;
+  position: relative;
+}
+
+.reach-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.reach-card {
+  background: var(--cream);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(232, 93, 4, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.reach-card:hover {
+  border-color: rgba(232, 93, 4, 0.2);
+  box-shadow: 0 8px 30px rgba(232, 93, 4, 0.1);
+  transform: translateY(-4px);
+}
+
+.reach-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(232, 93, 4, 0.04), rgba(255, 183, 77, 0.06));
+  border-bottom: 1px solid rgba(232, 93, 4, 0.06);
+}
+
+.reach-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--gradient-brand);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.reach-card-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0;
+}
+
+.reach-from {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.reach-badge {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(232, 93, 4, 0.1);
+  color: var(--saffron);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.reach-details {
+  padding: 16px 24px;
+}
+
+.reach-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+  gap: 12px;
+}
+
+.reach-detail-row:last-child {
+  border-bottom: none;
+}
+
+.reach-detail-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--dark);
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
+.reach-detail-value {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.82rem;
+  color: #666;
+  text-align: right;
+}
+
+.reach-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 24px;
+  margin: 0 16px 16px;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.06), rgba(37, 211, 102, 0.02));
+  border-radius: var(--radius-md);
+  border-left: 3px solid #25D366;
+}
+
+.reach-tip-icon {
+  color: #25D366;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.reach-tip p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Bottom CTA */
+.reach-bottom-cta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.reach-address-card,
+.reach-help-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  background: var(--cream);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(232, 93, 4, 0.1);
+}
+
+.reach-addr-icon,
+.reach-help-icon {
+  color: var(--saffron);
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.reach-address-card h4,
+.reach-help-card h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0 0 6px;
+}
+
+.reach-address-card p,
+.reach-help-card p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.reach-help-card a {
+  color: var(--saffron);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.reach-help-card a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .reach-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .reach-card-header {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px 18px;
+  }
+
+  .reach-badge {
+    margin-left: 0;
+  }
+
+  .reach-details {
+    padding: 12px 18px;
+  }
+
+  .reach-detail-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .reach-detail-value {
+    text-align: left;
+  }
+
+  .reach-bottom-cta {
+    grid-template-columns: 1fr;
+  }
+
+  .reach-tip {
+    margin: 0 12px 12px;
+    padding: 12px 16px;
+  }
+}

@@ -1,0 +1,101 @@
+.amenities-section {
+  background: var(--cool-section);
+  position: relative;
+  overflow: hidden;
+}
+
+.amenities-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0v40M0 20h40' stroke='%23D4600A' stroke-width='0.2' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.amenity-card {
+  background: white;
+  padding: 30px 22px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.amenity-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-light);
+}
+
+.amenity-highlight {
+  border-color: rgba(232,93,4,0.15);
+  background: linear-gradient(180deg, white 0%, rgba(255,248,240,0.5) 100%);
+}
+
+.amenity-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-warm);
+}
+
+.amenity-icon-wrap {
+  width: 62px;
+  height: 62px;
+  background: var(--cream);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 22px;
+  color: var(--saffron);
+  transition: all 0.4s ease;
+  border: 1px solid var(--border-light);
+}
+
+.amenity-card:hover .amenity-icon-wrap {
+  background: var(--gradient-warm);
+  color: white;
+  border-color: transparent;
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 8px 24px rgba(212, 96, 10, 0.25);
+}
+
+.amenity-card h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: 8px;
+}
+
+.amenity-card p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .amenities-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .amenities-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .amenity-card { padding: 24px 16px; }
+}
+
+@media (max-width: 480px) {
+  .amenities-grid { grid-template-columns: 1fr; }
+}

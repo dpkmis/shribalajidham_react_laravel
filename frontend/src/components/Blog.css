@@ -1,0 +1,211 @@
+/* ============ BLOG / TRAVEL GUIDE SECTION ============ */
+.blog-section {
+  background: var(--gradient-cream);
+  position: relative;
+  overflow: hidden;
+}
+
+.blog-bg-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='%23E85D04' stroke-width='0.3' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.blog-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(232, 93, 4, 0.06);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+
+.blog-card:hover {
+  box-shadow: 0 8px 32px rgba(232, 93, 4, 0.1);
+  transform: translateY(-4px);
+}
+
+.blog-expanded {
+  grid-column: 1 / -1;
+}
+
+.blog-card-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.blog-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.blog-card:hover .blog-card-image img {
+  transform: scale(1.05);
+}
+
+.blog-read-time {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.blog-card-body {
+  padding: 24px;
+}
+
+.blog-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(232, 93, 4, 0.1), rgba(255, 183, 77, 0.1));
+  color: var(--saffron);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  margin-bottom: 14px;
+}
+
+.blog-card-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+
+.blog-subtitle {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  color: var(--saffron);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.blog-intro {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+/* Expanded Content */
+.blog-full-content {
+  border-top: 1px solid rgba(232, 93, 4, 0.1);
+  padding-top: 20px;
+  margin-bottom: 16px;
+}
+
+.blog-content-item {
+  margin-bottom: 18px;
+}
+
+.blog-content-item h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0 0 6px;
+}
+
+.blog-content-item p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.blog-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(232, 93, 4, 0.05), rgba(255, 183, 77, 0.05));
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--saffron);
+  margin-top: 20px;
+}
+
+.blog-tip svg {
+  color: var(--saffron);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.blog-tip p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Read More Button */
+.blog-read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--saffron);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.blog-read-more:hover {
+  color: var(--deep-saffron);
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-expanded {
+    grid-column: 1;
+  }
+
+  .blog-card-image {
+    height: 180px;
+  }
+
+  .blog-card-body {
+    padding: 18px;
+  }
+
+  .blog-card-body h3 {
+    font-size: 1.05rem;
+  }
+}

@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* ============ BRAND COLORS — Temple Inspired ============ */
+  /* Primary — Sacred Saffron/Kumkum */
+  --saffron: #D4600A;
+  --saffron-light: #F07B2E;
+  --saffron-dark: #B24A00;
+  --deep-saffron: #C04E00;
+
+  /* Accent — Divine Gold */
+  --gold: #D4A017;
+  --gold-light: #F0C850;
+  --gold-deep: #B8860B;
+  --gold-pale: #FFF1C6;
+
+  /* Sacred Red — Vermillion/Sindoor */
+  --vermillion: #C62828;
+  --vermillion-light: #E53935;
+  --maroon: #7B1818;
+  --maroon-deep: #4A0E0E;
+
+  /* Accent — Temple Green (Tulsi) */
+  --temple-green: #2E7D32;
+  --temple-green-light: #43A047;
+
+  /* ============ BACKGROUNDS ============ */
+  --dark-primary: #0D0B08;
+  --dark-secondary: #1A1610;
+  --dark-card: #221E17;
+  --dark-elevated: #2A261E;
+
+  --cream: #FFF9F0;
+  --cream-dark: #FFEFD5;
+  --cream-deep: #FFE4BC;
+  --ivory: #FFFDF7;
+  --warm-white: #FEFCF8;
+  --warm-bg: #FDF6EC;
+  --cool-section: #F8F4EE;
+
+  /* ============ TEXT ============ */
+  --text-heading: #1C1108;
+  --text-body: #4A3F33;
+  --text-muted: #8C7E6F;
+  --text-light: #F5EFE7;
+  --text-white: #FFFFFF;
+  --dark: #1C1108;
+
+  /* ============ GRADIENTS ============ */
+  --gradient-brand: linear-gradient(135deg, #D4600A 0%, #C62828 40%, #D4A017 100%);
+  --gradient-warm: linear-gradient(135deg, #D4600A 0%, #F0C850 100%);
+  --gradient-fire: linear-gradient(135deg, #C62828 0%, #D4600A 50%, #D4A017 100%);
+  --gradient-gold: linear-gradient(135deg, #B8860B 0%, #F0C850 50%, #B8860B 100%);
+  --gradient-dark: linear-gradient(180deg, #0D0B08 0%, #1C1108 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(13,11,8,0.75) 0%, rgba(13,11,8,0.4) 40%, rgba(13,11,8,0.85) 100%);
+  --gradient-temple: linear-gradient(135deg, #7B1818 0%, #D4600A 50%, #D4A017 100%);
+  --gradient-sacred: linear-gradient(135deg, #D4600A 0%, #C62828 100%);
+  --gradient-cream: linear-gradient(180deg, #FFF9F0 0%, #FFEFD5 100%);
+  --gradient-section-alt: linear-gradient(180deg, #FEFCF8 0%, #FFF9F0 100%);
+
+  /* ============ SHADOWS ============ */
+  --shadow-sm: 0 2px 12px rgba(212, 96, 10, 0.06);
+  --shadow-md: 0 8px 32px rgba(212, 96, 10, 0.10);
+  --shadow-lg: 0 16px 56px rgba(212, 96, 10, 0.14);
+  --shadow-card: 0 4px 24px rgba(28, 17, 8, 0.05);
+  --shadow-hover: 0 12px 44px rgba(212, 96, 10, 0.12);
+  --shadow-elevated: 0 20px 60px rgba(28, 17, 8, 0.08);
+  --shadow-glow: 0 0 40px rgba(212, 96, 10, 0.15);
+
+  /* ============ BORDERS ============ */
+  --border-light: rgba(212, 96, 10, 0.08);
+  --border-medium: rgba(212, 96, 10, 0.15);
+  --border-gold: rgba(212, 160, 23, 0.25);
+  --border-subtle: rgba(28, 17, 8, 0.06);
+
+  /* ============ BORDER RADIUS ============ */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-full: 50px;
+}
+
+/* ============ BASE STYLES ============ */
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-body);
+  background-color: var(--warm-white);
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  color: var(--text-heading);
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ============ SELECTION ============ */
+::selection {
+  background: rgba(212, 96, 10, 0.15);
+  color: var(--text-heading);
+}
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--saffron), var(--gold));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--saffron-dark);
+}
+
+/* ============ SECTION STYLES ============ */
+.section {
+  padding: 110px 0;
+  position: relative;
+}
+
+.container {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.section-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 4.5px;
+  color: var(--saffron);
+  margin-bottom: 14px;
+  display: inline-block;
+  position: relative;
+}
+
+.section-subtitle::before,
+.section-subtitle::after {
+  content: '—';
+  margin: 0 14px;
+  color: var(--gold);
+}
+
+.section-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 20px;
+  line-height: 1.12;
+  letter-spacing: -0.5px;
+}
+
+.section-divider {
+  width: 72px;
+  height: 3px;
+  background: var(--gradient-warm);
+  margin: 0 auto 24px;
+  border-radius: 2px;
+  position: relative;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: var(--gold);
+  border-radius: 50%;
+  border: 3px solid var(--warm-white);
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+.section-description {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.85;
+}
+
+/* ============ BUTTONS ============ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 40px;
+  background: var(--gradient-warm);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 4px 16px rgba(212, 96, 10, 0.25);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-fire);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(212, 96, 10, 0.35);
+}
+
+.btn-primary:hover::before {
+  opacity: 1;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 40px;
+  background: transparent;
+  color: var(--saffron);
+  border: 2px solid var(--saffron);
+  border-radius: var(--radius-full);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.btn-outline:hover {
+  background: var(--saffron);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(212, 96, 10, 0.3);
+}
+
+/* ============ DECORATIVE ELEMENTS ============ */
+.ornament {
+  display: inline-block;
+  font-size: 24px;
+  color: var(--gold);
+  opacity: 0.4;
+}
+
+/* Temple-style decorative line */
+.temple-line {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--gold) 0px,
+    var(--gold) 8px,
+    transparent 8px,
+    transparent 14px
+  );
+  opacity: 0.3;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .section {
+    padding: 85px 0;
+  }
+  .section-title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 65px 0;
+  }
+  .section-title {
+    font-size: 33px;
+  }
+  .section-header {
+    margin-bottom: 48px;
+  }
+  .section-subtitle {
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+  .btn-primary, .btn-outline {
+    padding: 14px 32px;
+    font-size: 13px;
+  }
+  .container {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 28px;
+  }
+}

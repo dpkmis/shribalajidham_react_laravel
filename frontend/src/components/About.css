@@ -1,0 +1,195 @@
+.about-section {
+  background: var(--gradient-cream);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%23D4600A' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 70px;
+  align-items: start;
+}
+
+/* Visual Side */
+.about-visual { position: relative; }
+
+.about-img-stack { position: relative; }
+
+.about-img-primary {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.about-img-primary img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.about-img-primary:hover img { transform: scale(1.03); }
+
+.about-img-accent {
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 210px;
+  height: 210px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 5px solid var(--cream);
+  box-shadow: var(--shadow-md);
+}
+
+.about-img-accent img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-exp-card {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  background: var(--gradient-fire);
+  color: white;
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 10px 36px rgba(212, 96, 10, 0.35);
+  z-index: 2;
+}
+
+.exp-icon { font-size: 28px; opacity: 0.9; }
+
+.exp-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.exp-text {
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* Content Side */
+.about-content .section-subtitle::before,
+.about-content .section-subtitle::after { display: none; }
+
+.about-text {
+  color: var(--text-body);
+  line-height: 1.85;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.about-text strong { color: var(--text-heading); }
+
+.about-usp-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 24px 0 30px;
+  padding: 20px;
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.usp-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-body);
+}
+
+.usp-check { color: #28a745; font-size: 13px; min-width: 13px; }
+
+/* Highlights */
+.about-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.highlight-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px;
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s ease;
+}
+
+.highlight-card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+}
+
+.highlight-icon {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  background: var(--gradient-warm);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+.highlight-card h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: 3px;
+}
+
+.highlight-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 968px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .about-img-accent { right: 10px; bottom: -20px; width: 160px; height: 160px; }
+  .about-exp-card { left: 10px; top: -10px; }
+
+  .about-content .section-title { text-align: center !important; }
+  .about-content .section-divider { margin-left: auto !important; }
+  .about-content .section-subtitle { display: block; text-align: center; }
+  .about-content .section-subtitle::before,
+  .about-content .section-subtitle::after { display: inline; }
+}
+
+@media (max-width: 576px) {
+  .about-usp-list { grid-template-columns: 1fr; }
+  .about-highlights { grid-template-columns: 1fr; }
+  .about-img-primary img { height: 320px; }
+}

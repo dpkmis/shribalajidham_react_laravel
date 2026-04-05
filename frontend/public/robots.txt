@@ -1,0 +1,23 @@
+# Shri Balaji Dham Hotel Mathura - robots.txt
+# https://shribalajidhamhotel.com/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /static/js/
+Disallow: /static/css/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+
+# Sitemap
+Sitemap: https://shribalajidhamhotel.com/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2

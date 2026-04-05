@@ -1,0 +1,261 @@
+/* ============ FESTIVAL OFFERS SECTION ============ */
+.festival-section {
+  background: white;
+  position: relative;
+}
+
+.festival-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.festival-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(232, 93, 4, 0.08);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  background: white;
+}
+
+.festival-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.festival-card-top {
+  padding: 28px 24px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.festival-card-top::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+}
+
+.festival-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.2);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.festival-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.festival-name-hindi {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.festival-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.festival-card-body {
+  padding: 24px;
+}
+
+.festival-desc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.festival-card-body h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.festival-includes {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.festival-includes li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.83rem;
+  color: #555;
+  padding: 4px 0;
+  line-height: 1.5;
+}
+
+.fest-star {
+  color: var(--gold);
+  font-size: 0.65rem;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.festival-pricing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  border-top: 1px solid rgba(232, 93, 4, 0.08);
+  gap: 16px;
+}
+
+.festival-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.fp-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.72rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fp-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--saffron);
+}
+
+.fp-per {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.72rem;
+  color: #999;
+}
+
+.festival-btn {
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gradient-brand);
+  color: white;
+  border: none;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.festival-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(232, 93, 4, 0.3);
+}
+
+/* Notice */
+.festival-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, rgba(232, 93, 4, 0.05), rgba(255, 183, 77, 0.08));
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(232, 93, 4, 0.12);
+}
+
+.festival-notice-icon {
+  color: var(--saffron);
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.festival-notice h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0 0 6px;
+}
+
+.festival-notice p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.festival-notice a {
+  color: var(--saffron);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.festival-notice a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .festival-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .festival-card-top {
+    padding: 20px 18px;
+  }
+
+  .festival-name {
+    font-size: 1.15rem;
+  }
+
+  .festival-card-body {
+    padding: 18px;
+  }
+
+  .festival-pricing {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .festival-notice {
+    flex-direction: column;
+    padding: 20px;
+  }
+}

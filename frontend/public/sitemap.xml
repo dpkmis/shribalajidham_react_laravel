@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://shribalajidhamhotel.com/</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://shribalajidhamhotel.com/images/hotel-entrance.jpeg</image:loc>
+      <image:title>Shri Balaji Dham Hotel Entrance Mathura</image:title>
+      <image:caption>Front entrance of Shri Balaji Dham Hotel with neon signage in Dhauli Pyau, Mathura</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://shribalajidhamhotel.com/images/room-family.jpeg</image:loc>
+      <image:title>Family Room at Shri Balaji Dham Hotel</image:title>
+      <image:caption>Spacious family room with twin beds and AC at Shri Balaji Dham Hotel Mathura</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://shribalajidhamhotel.com/images/hotel-corridor.jpeg</image:loc>
+      <image:title>Hotel Corridor - Shri Balaji Dham</image:title>
+      <image:caption>Clean marble corridor at Shri Balaji Dham Hotel Mathura</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#rooms</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#packages</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#gallery</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#testimonials</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#how-to-reach</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#booking</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://shribalajidhamhotel.com/#contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

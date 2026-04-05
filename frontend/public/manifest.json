@@ -1,0 +1,32 @@
+{
+  "short_name": "Balaji Dham Hotel",
+  "name": "Shri Balaji Dham Hotel Mathura - Best Budget Hotel Near Railway Station",
+  "description": "Best budget hotel near Mathura Junction Railway Station. Clean AC rooms, complimentary breakfast, temple tour packages. Book direct for best rates!",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#E85D04",
+  "background_color": "#FFF8F0",
+  "orientation": "portrait-primary",
+  "categories": ["travel", "hotel", "tourism"],
+  "lang": "en-IN",
+  "dir": "ltr"
+}

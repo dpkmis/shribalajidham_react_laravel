@@ -1,0 +1,181 @@
+.rating-section { background: var(--warm-white); }
+
+.rating-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.rating-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 34px;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s ease;
+}
+
+.rating-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
+}
+
+.rcard-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.rcard-icon { font-size: 36px; }
+.google-color { color: #4285F4; }
+.tripadvisor-color { color: #00AF87; }
+
+.rcard-header h3 {
+  font-size: 20px;
+  color: var(--text-heading);
+}
+
+.rcard-score { text-align: center; margin-bottom: 28px; }
+
+.rcard-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--text-heading);
+  display: block;
+  line-height: 1;
+}
+
+.rcard-stars { display: flex; justify-content: center; gap: 4px; margin: 10px 0 6px; }
+.rcard-stars svg { color: var(--gold); font-size: 20px; }
+
+.rcard-count { font-size: 13px; color: var(--text-muted); }
+
+/* Rating Bars */
+.rating-bars { display: flex; flex-direction: column; gap: 10px; }
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 36px;
+  color: var(--text-heading);
+}
+
+.bar-label svg { font-size: 11px; color: var(--gold); }
+
+.bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--gradient-warm);
+  border-radius: 4px;
+  transition: width 1.2s ease;
+}
+
+.bar-pct { font-size: 12px; color: var(--text-muted); min-width: 35px; text-align: right; }
+
+/* TripAdvisor Card */
+.ta-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0,175,135,0.06);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.ta-badge svg { font-size: 28px; color: #00AF87; flex-shrink: 0; }
+.ta-badge-title { display: block; font-size: 14px; font-weight: 600; color: #00AF87; }
+.ta-badge-sub { display: block; font-size: 12px; color: var(--text-muted); }
+
+.ta-quote {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.ta-thumb { color: var(--saffron); font-size: 18px; margin-top: 2px; flex-shrink: 0; }
+
+.ta-quote p {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Highlights Card */
+.hcard h3 { font-size: 20px; margin-bottom: 4px; }
+.hcard-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
+
+.highlight-bars { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+
+.hbar-info { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.hbar-label { font-size: 13px; font-weight: 500; color: var(--text-heading); }
+.hbar-pct { font-size: 13px; font-weight: 600; color: var(--saffron); }
+
+.hbar-track {
+  height: 6px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hbar-fill {
+  height: 100%;
+  background: var(--gradient-warm);
+  border-radius: 3px;
+  transition: width 1.5s ease;
+}
+
+.overall-satisfaction {
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.os-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.os-bar {
+  height: 32px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.os-fill {
+  height: 100%;
+  background: var(--gradient-warm);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 16px;
+  transition: width 2s ease;
+}
+
+.os-fill span { color: white; font-size: 14px; font-weight: 700; }
+
+@media (max-width: 968px) {
+  .rating-cards { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+}
