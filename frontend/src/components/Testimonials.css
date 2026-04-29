@@ -159,5 +159,7 @@
 }
 
 @media (max-width: 480px) {
-  .testi-card { padding: 24px; }
+  .testi-card { padding: 20px 16px; }
+  .testi-text { font-size: 13px; }
+  .testi-nav { width: 42px; height: 42px; min-width: 42px; font-size: 14px; }
 }

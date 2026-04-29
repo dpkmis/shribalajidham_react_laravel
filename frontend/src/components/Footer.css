@@ -187,9 +187,18 @@
 
 @media (max-width: 968px) {
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+  .footer-wave svg { height: 50px; }
 }
 
 @media (max-width: 576px) {
-  .footer-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
   .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+  .footer-wave { margin-bottom: 36px; }
+  .footer-wave svg { height: 36px; }
+  .scroll-top-btn { bottom: 80px; right: 16px; width: 44px; height: 44px; }
+}
+
+@media (max-width: 360px) {
+  .fb-links { gap: 12px; }
+  .footer-desc { font-size: 12px; }
 }

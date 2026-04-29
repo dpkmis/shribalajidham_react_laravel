@@ -211,7 +211,15 @@
   color: white;
 }
 
-.nav-overlay { display: none; }
+/* ✅ Overlay — fixed full screen, below menu */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 11, 8, 0.5);
+  z-index: 998;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
 
 /* ============ MOBILE ============ */
 @media (max-width: 1024px) {
@@ -225,21 +233,13 @@
 @media (max-width: 968px) {
   .nav-toggle { display: flex; }
 
-  .nav-overlay {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(13,11,8,0.5);
-    z-index: 998;
-    backdrop-filter: blur(4px);
-  }
-
   .nav-menu {
     position: fixed;
     top: 0;
-    right: -320px;
-    width: 300px;
+    right: -100%;
+    width: min(300px, 90vw);
     height: 100vh;
+    height: 100dvh;
     background: white;
     flex-direction: column;
     align-items: stretch;
@@ -247,8 +247,13 @@
     gap: 0;
     box-shadow: -10px 0 50px rgba(0,0,0,0.15);
     transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 999;
+    z-index: 1001;
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    /* ✅ KEY FIX: clip content so it never causes page overflow */
+    clip-path: inset(0);
   }
 
   .nav-menu.active { right: 0; }
@@ -260,6 +265,9 @@
     padding: 22px 24px;
     border-bottom: 1px solid rgba(0,0,0,0.06);
     background: var(--cream);
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   .mobile-logo-text {
@@ -284,12 +292,21 @@
     font-size: 22px;
     color: var(--text-muted);
     cursor: pointer;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav-link {
     padding: 16px 24px;
     font-size: 15px;
     border-bottom: 1px solid rgba(0,0,0,0.04);
+    min-height: 52px;
+    display: flex;
+    align-items: center;
   }
 
   .nav-link::after { display: none; }
@@ -302,7 +319,19 @@
 }
 
 @media (max-width: 480px) {
-  .top-bar-left { gap: 12px; }
+  .top-bar { display: none; }
+  .navbar-inner { padding: 10px 16px; }
   .logo-img { height: 40px; }
   .footer-logo-img { height: 36px; }
+  .nav-toggle {
+    padding: 10px 12px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  .navbar-inner { padding: 8px 12px; }
+  .logo-balaji { font-size: 22px; }
+  .logo-dham { font-size: 18px; }
 }

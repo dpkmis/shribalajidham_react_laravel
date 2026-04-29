@@ -14,6 +14,16 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
   const closeMenu = () => setIsOpen(false);
 
   const navLinks = [
@@ -30,6 +40,9 @@ const Navbar = () => {
 
   return (
     <>
+      {/* ✅ FIX 1: Overlay moved OUTSIDE navbar so it covers full screen */}
+      {isOpen && <div className="nav-overlay" onClick={closeMenu}></div>}
+
       <div className="top-bar">
         <div className="container top-bar-inner">
           <div className="top-bar-left">
@@ -61,7 +74,6 @@ const Navbar = () => {
                 <span className="logo-shri">श्री</span>
               </div>
             )}
-          
           </a>
 
           <div className={`nav-menu ${isOpen ? 'active' : ''}`}>
@@ -79,10 +91,14 @@ const Navbar = () => {
             <a href="#booking" className="btn-book" onClick={closeMenu}>Book Now</a>
           </div>
 
-          {isOpen && <div className="nav-overlay" onClick={closeMenu}></div>}
-
-          <button className="nav-toggle" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
-            <FaBars />
+          {/* ✅ FIX 2: Toggle icon switches between FaBars and FaTimes */}
+          <button
+            className="nav-toggle"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
       </nav>

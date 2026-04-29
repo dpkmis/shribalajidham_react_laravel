@@ -112,4 +112,11 @@
 @media (max-width: 768px) {
   .contact-layout { grid-template-columns: 1fr; }
   .contact-map { min-height: 320px; }
+  .ccard { padding: 16px; }
+}
+
+@media (max-width: 480px) {
+  .contact-map { min-height: 280px; }
+  .social-icons { gap: 10px; }
+  .soc-icon { width: 44px; height: 44px; font-size: 18px; }
 }

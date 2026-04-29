@@ -179,3 +179,8 @@
 @media (max-width: 968px) {
   .rating-cards { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
 }
+
+@media (max-width: 480px) {
+  .rating-card { padding: 22px 16px; }
+  .rcard-number { font-size: 42px; }
+}

@@ -100,4 +100,11 @@
 
 @media (max-width: 576px) {
   .attractions-grid { grid-template-columns: 1fr; }
+  .attract-img { height: 180px; }
+  .attract-body { padding: 16px; }
+}
+
+@media (max-width: 360px) {
+  .attract-body h3 { font-size: 16px; }
+  .attract-body p { font-size: 12px; }
 }

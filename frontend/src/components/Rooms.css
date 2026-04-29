@@ -247,9 +247,22 @@
   .room-nav-btn { min-width: 150px; }
 }
 
+@media (max-width: 768px) {
+  .room-showcase-img img { min-height: 260px; }
+  .room-showcase-info h3 { font-size: 24px; }
+  .room-price-badge { padding: 12px 16px; }
+  .rpb-amount { font-size: 24px; }
+}
+
 @media (max-width: 576px) {
   .rooms-nav { flex-direction: column; align-items: stretch; }
   .room-nav-btn { min-width: auto; }
   .room-features-list { grid-template-columns: 1fr; }
   .room-specs-row { flex-direction: column; }
+  .room-showcase-info { padding: 20px 16px; }
+  .room-showcase-img img { min-height: 220px; }
+}
+
+@media (max-width: 360px) {
+  .room-amenity-chip { font-size: 11px; padding: 6px 10px; }
 }

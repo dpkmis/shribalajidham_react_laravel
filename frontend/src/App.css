@@ -102,3 +102,19 @@
 .bg-paisley {
   background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 20 Q50 10 60 20 Q70 30 60 40 Q50 50 40 40 Q30 50 20 40 Q10 30 20 20 Q30 10 40 20Z' fill='none' stroke='%23D4600A' stroke-width='0.3' opacity='0.03'/%3E%3C/svg%3E");
 }
+
+
+/* ✅ ADD THESE LINES TO YOUR index.css or App.css */
+/* Prevents ANY element from causing horizontal scroll on mobile */
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Ensure fixed positioned elements don't expand viewport width */
+#root {
+  overflow-x: hidden;
+  max-width: 100vw;
+}

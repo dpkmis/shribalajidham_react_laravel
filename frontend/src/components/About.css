@@ -191,5 +191,13 @@
 @media (max-width: 576px) {
   .about-usp-list { grid-template-columns: 1fr; }
   .about-highlights { grid-template-columns: 1fr; }
-  .about-img-primary img { height: 320px; }
+  .about-img-primary img { height: 280px; }
+  .about-img-accent { width: 120px; height: 120px; right: 8px; }
+  .about-exp-card { padding: 14px 16px; }
+  .exp-number { font-size: 28px; }
+}
+
+@media (max-width: 360px) {
+  .about-img-primary img { height: 240px; }
+  .about-img-accent { display: none; }
 }

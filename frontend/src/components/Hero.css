@@ -304,6 +304,7 @@
   .hero-welcome { font-size: 16px; letter-spacing: 3px; }
   .hero-sub-brand { font-size: 12px; letter-spacing: 5px; }
   .hero-description { font-size: 14px; }
+  .hero-tagline-text { font-size: 17px; }
 
   .hero-cta {
     flex-direction: column;
@@ -314,15 +315,31 @@
   .hero-trust-strip {
     flex-wrap: wrap;
     gap: 22px;
-    padding: 22px 28px;
+    padding: 22px 20px;
   }
 
   .trust-value { font-size: 28px; }
   .trust-divider { display: none; }
   .hero-scroll-indicator { display: none; }
+
+  .hero-bottom-wave svg { height: 60px; }
 }
 
 @media (max-width: 480px) {
+  .hero-content { padding: 30px 16px; }
   .hero-brand { font-size: 36px; }
-  .hero-badge { font-size: 11px; padding: 8px 18px; letter-spacing: 2px; }
+  .hero-welcome { font-size: 14px; letter-spacing: 2px; }
+  .hero-badge { font-size: 11px; padding: 8px 16px; letter-spacing: 2px; }
+  .hero-description { font-size: 13px; margin-bottom: 28px; }
+  .hero-cta { margin-bottom: 36px; }
+  .hero-trust-strip { gap: 16px; padding: 18px 16px; }
+  .trust-value { font-size: 24px; }
+  .trust-label { font-size: 10px; }
+  .hero-bottom-wave svg { height: 40px; }
+}
+
+@media (max-width: 360px) {
+  .hero-brand { font-size: 30px; }
+  .hero-sub-brand { font-size: 10px; letter-spacing: 3px; }
+  .hero-trust-strip { gap: 12px; padding: 14px 12px; }
 }
