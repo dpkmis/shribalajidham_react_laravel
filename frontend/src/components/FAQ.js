@@ -7,7 +7,7 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const { contact, booking } = useSite();
   const phone = contact.phone_display || '+91 96390 66602';
-  const wa = contact.whatsapp || '919639066602';
+  const wa = contact.whatsapp || '918755550410';
 
   const faqs = [
     {

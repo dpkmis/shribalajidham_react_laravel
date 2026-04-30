@@ -13,9 +13,9 @@ const fallbackMeta = {
     logo: '',
   },
   contact: {
-    phone: '+919639066602',
-    phone_display: '+91 96390 66602',
-    whatsapp: '919639066602',
+    phone: '+918755550410',
+    phone_display: '+91 8755550410',
+    whatsapp: '918755550410',
     email: 'sribalajidhamhotel@gmail.com',
     address: '580 Shankar Gali, Natwar Nagar, Dhauli Pyau, Mathura, Uttar Pradesh — 281001',
     address_short: 'Dhauli Pyau, Mathura, Uttar Pradesh',

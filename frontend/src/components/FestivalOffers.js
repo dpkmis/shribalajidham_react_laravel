@@ -124,7 +124,7 @@ const FestivalOffers = () => {
                     <span className="fp-amount">&#8377;{fest.price}</span>
                     <span className="fp-per">per person</span>
                   </div>
-                  <a href="{`https://wa.me/${contact.whatsapp || '919639066602'}`}?text=Hi%2C%20I%20want%20to%20book%20the%20{encodeURIComponent(fest.name)}%20package%20at%20Shri%20Balaji%20Dham%20Hotel%20Mathura" target="_blank" rel="noopener noreferrer" className="btn-primary festival-btn">
+                  <a href="{`https://wa.me/${contact.whatsapp || '918755550410'}`}?text=Hi%2C%20I%20want%20to%20book%20the%20{encodeURIComponent(fest.name)}%20package%20at%20Shri%20Balaji%20Dham%20Hotel%20Mathura" target="_blank" rel="noopener noreferrer" className="btn-primary festival-btn">
                     Book Now <FaArrowRight />
                   </a>
                 </div>
@@ -139,7 +139,7 @@ const FestivalOffers = () => {
             <h4>Book Festival Packages Early — Rooms Fill Fast!</h4>
             <p>
               Call <a href="{`tel:${contact.phone}`}">{contact.phone_display}</a> or
-              <a href="{`https://wa.me/${contact.whatsapp || '919639066602'}`}" target="_blank" rel="noopener noreferrer"> WhatsApp us</a> to
+              <a href="{`https://wa.me/${contact.whatsapp || '918755550410'}`}" target="_blank" rel="noopener noreferrer"> WhatsApp us</a> to
               check availability and reserve your festival stay. Advance booking recommended for Holi and Janmashtami (2-3 months prior).
             </p>
           </div>
