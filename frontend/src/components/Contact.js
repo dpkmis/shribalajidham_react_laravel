@@ -50,7 +50,7 @@ const Contact = () => {
           <div className="contact-map">
             <iframe
               title="Shri Balaji Dham Hotel Mathura Location"
-              src={contact.google_maps_embed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3534.5!2d77.6737!3d27.5046"}
+              src={contact.google_maps_embed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3539.8167410052333!2d77.6761729!3d27.474964099999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39737195f3507afd%3A0x2784781dcc70e89!2sShri%20Bala%20ji%20Dham!5e0!3m2!1sen!2sin!4v1777554856074!5m2!1sen!2sin"}
               width="100%" height="100%"
               style={{ border: 0, borderRadius: 'var(--radius-lg)' }}
               allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"

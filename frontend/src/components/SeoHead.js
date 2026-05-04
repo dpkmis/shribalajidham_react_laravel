@@ -2,8 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useSite } from '../context/SiteContext';
 
 const SeoHead = () => {
-  const { meta, general, contact, hero, booking } = useSite();
-  const seo = meta.seo || {};
+  const { meta, general, contact, hero, booking, seo } = useSite();
 
   const title = seo.meta_title || `${general.site_name} — ${general.hero_badge}`;
   const description = seo.meta_description || general.short_description || '';

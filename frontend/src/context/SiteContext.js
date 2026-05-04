@@ -13,13 +13,14 @@ const fallbackMeta = {
     logo: '',
   },
   contact: {
-    phone: '+918755550410',
-    phone_display: '+91 8755550410',
+    phone: '+918755550411',
+    phone_display: '+91 8755550411',
     whatsapp: '918755550410',
     email: 'sribalajidhamhotel@gmail.com',
     address: '580 Shankar Gali, Natwar Nagar, Dhauli Pyau, Mathura, Uttar Pradesh — 281001',
     address_short: 'Dhauli Pyau, Mathura, Uttar Pradesh',
     google_maps_url: 'https://maps.google.com/?q=Shri+Balaji+Dham+Hotel+Mathura',
+    google_maps_embed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3539.8167410052333!2d77.6761729!3d27.474964099999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39737195f3507afd%3A0x2784781dcc70e89!2sShri%20Bala%20ji%20Dham!5e0!3m2!1sen!2sin!4v1777554856074!5m2!1sen!2sin',
   },
   social: {
     facebook: '', instagram: '', youtube: '', twitter: '',
@@ -74,9 +75,10 @@ export function SiteProvider({ children }) {
   const general = meta.general || {};
   const policies = meta.policies || {};
   const booking = meta.booking || {};
+  const seo = meta.seo || {};
 
   return (
-    <SiteContext.Provider value={{ meta, loaded, get, contact, social, hero, general, policies, booking }}>
+    <SiteContext.Provider value={{ meta, loaded, get, contact, social, hero, general, policies, booking, seo }}>
       {children}
     </SiteContext.Provider>
   );
